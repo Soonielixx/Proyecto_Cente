@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EnRuta — Especificación de requisitos de software</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EEF1F3;
+  --surface:#FFFFFF;
+  --surface-2:#F7F9FA;
+  --ink:#0F1E2B;
+  --ink-2:#4C6072;
+  --ink-3:#7C8E9C;
+  --blue:#14497A;
+  --blue-deep:#0B2F52;
+  --hi:#E8B000;
+  --hi-soft:#FBEFC4;
+  --green:#1B6E51;
+  --red:#A32C1E;
+  --line:#CFD8DE;
+  --line-soft:#E3E9ED;
+  --sans:'Archivo',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --serif:'Source Serif 4',Georgia,'Times New Roman',serif;
+  --mono:'IBM Plex Mono',ui-monospace,'SFMono-Regular',Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0D161E;
+    --surface:#131F29;
+    --surface-2:#182631;
+    --ink:#E6EDF2;
+    --ink-2:#A6B8C5;
+    --ink-3:#7A8D9B;
+    --blue:#6FA8DC;
+    --blue-deep:#9CC4E4;
+    --hi:#E8B000;
+    --hi-soft:#3A3013;
+    --green:#5BC49A;
+    --red:#E8897C;
+    --line:#2C3E4C;
+    --line-soft:#223341;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0D161E; --surface:#131F29; --surface-2:#182631;
+  --ink:#E6EDF2; --ink-2:#A6B8C5; --ink-3:#7A8D9B;
+  --blue:#6FA8DC; --blue-deep:#9CC4E4; --hi:#E8B000; --hi-soft:#3A3013;
+  --green:#5BC49A; --red:#E8897C; --line:#2C3E4C; --line-soft:#223341;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--serif); font-size:17px; line-height:1.65;
+}
+img{max-width:100%}
+
+/* ---------- Hoja de ruta (encabezado) ---------- */
+.manifest{
+  background:var(--blue-deep); color:#fff;
+  border-bottom:6px solid var(--hi);
+}
+:root[data-theme="dark"] .manifest,
+:root:not([data-theme="light"]) .manifest{background:#0A2033}
+.manifest-inner{max-width:1180px; margin:0 auto; padding:44px 24px 0}
+.manifest h1{
+  font-family:var(--sans); font-weight:700; font-size:clamp(2rem,6vw,3.5rem);
+  line-height:1.02; margin:0 0 6px; letter-spacing:-.02em; color:#fff;
+}
+.manifest .sub{
+  font-family:var(--sans); font-weight:400; font-size:clamp(1rem,2.4vw,1.25rem);
+  color:#BCD3E6; margin:0 0 28px; max-width:56ch;
+}
+.fields{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  border-top:1px solid rgba(255,255,255,.22);
+}
+.field{
+  padding:12px 14px 14px; border-right:1px solid rgba(255,255,255,.14);
+  border-bottom:1px solid rgba(255,255,255,.14);
+}
+.field:last-child{border-right:none}
+.field .k{font-family:var(--sans); font-size:.68rem; letter-spacing:.06em; color:#7FA6C4; display:block; margin-bottom:3px}
+.field .v{font-family:var(--mono); font-size:.86rem; color:#fff}
+
+/* ---------- Estructura ---------- */
+.shell{max-width:1180px; margin:0 auto; padding:0 24px; display:grid; grid-template-columns:230px 1fr; gap:48px; align-items:start}
+nav.toc{position:sticky; top:0; max-height:100vh; overflow-y:auto; padding:36px 0 40px; font-family:var(--sans); font-size:.82rem}
+nav.toc .t{font-weight:600; color:var(--ink-3); margin-bottom:10px; font-size:.72rem; letter-spacing:.05em}
+nav.toc a{display:block; color:var(--ink-2); text-decoration:none; padding:4px 0 4px 11px; border-left:2px solid var(--line-soft); line-height:1.35}
+nav.toc a:hover{color:var(--blue); border-left-color:var(--hi)}
+nav.toc a:focus-visible{outline:2px solid var(--blue); outline-offset:2px}
+main{padding:36px 0 90px; min-width:0}
+details.toc-m{display:none}
+
+section{margin:0 0 54px; scroll-margin-top:18px}
+h2{
+  font-family:var(--sans); font-weight:700; font-size:1.55rem; line-height:1.15;
+  margin:0 0 4px; letter-spacing:-.015em;
+}
+h2 .num{color:var(--hi); font-family:var(--mono); font-size:.95rem; display:block; margin-bottom:6px; font-weight:500}
+h3{font-family:var(--sans); font-weight:600; font-size:1.08rem; margin:32px 0 8px; color:var(--ink)}
+h4{font-family:var(--sans); font-weight:600; font-size:.94rem; margin:22px 0 6px; color:var(--ink-2)}
+p{margin:0 0 14px; max-width:74ch}
+ul,ol{max-width:74ch; padding-left:20px; margin:0 0 16px}
+li{margin-bottom:6px}
+a{color:var(--blue)}
+code{font-family:var(--mono); font-size:.84em; background:var(--surface-2); padding:1px 5px; border-radius:3px; border:1px solid var(--line-soft)}
+.lead{font-size:1.06rem; color:var(--ink-2); max-width:70ch}
+hr.rule{border:none; border-top:2px solid var(--ink); margin:0 0 22px; max-width:100%}
+
+/* ---------- Tablas ---------- */
+.tw{overflow-x:auto; margin:0 0 20px; border:1px solid var(--line); background:var(--surface)}
+table{border-collapse:collapse; width:100%; min-width:620px; font-family:var(--sans); font-size:.845rem}
+th{
+  text-align:left; font-weight:600; background:var(--surface-2); color:var(--ink-2);
+  padding:9px 12px; border-bottom:2px solid var(--line); vertical-align:bottom; font-size:.78rem;
+}
+td{padding:9px 12px; border-bottom:1px solid var(--line-soft); vertical-align:top; line-height:1.45}
+tr:last-child td{border-bottom:none}
+td.id, th.id{white-space:nowrap; width:1%}
+.rid{font-family:var(--mono); font-size:.76rem; color:var(--blue); font-weight:500}
+
+.pri{font-family:var(--sans); font-size:.7rem; font-weight:600; padding:2px 7px; border-radius:2px; white-space:nowrap; display:inline-block}
+.p-must{background:var(--hi-soft); color:#7A5B00; border:1px solid var(--hi)}
+:root[data-theme="dark"] .p-must,:root:not([data-theme="light"]) .p-must{color:var(--hi)}
+.p-should{background:var(--surface-2); color:var(--ink-2); border:1px solid var(--line)}
+.p-could{background:transparent; color:var(--ink-3); border:1px dashed var(--line)}
+
+/* ---------- Bloques ---------- */
+.note{
+  background:var(--surface); border-left:4px solid var(--hi);
+  padding:14px 18px; margin:0 0 20px; font-size:.95rem;
+}
+.note strong{font-family:var(--sans)}
+.cols{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:18px; margin:0 0 20px}
+.card{background:var(--surface); border:1px solid var(--line); padding:16px 18px}
+.card h4{margin-top:0}
+.card p{font-size:.9rem; margin-bottom:0}
+.stack-pick{border-left:4px solid var(--blue)}
+
+pre.mermaid{
+  background:var(--surface); border:1px solid var(--line); padding:18px;
+  overflow-x:auto; margin:0 0 20px; text-align:center;
+}
+.tiny{font-size:.82rem; color:var(--ink-3); font-family:var(--sans); max-width:74ch}
+
+footer{
+  border-top:6px solid var(--hi); background:var(--blue-deep); color:#BCD3E6;
+  font-family:var(--sans); font-size:.82rem; padding:26px 24px 34px;
+}
+footer .fi{max-width:1180px; margin:0 auto}
+footer a{color:#fff}
+
+@media (max-width:880px){
+  body{font-size:16px}
+  .shell{grid-template-columns:1fr; gap:0; padding:0 18px}
+  nav.toc{display:none}
+  details.toc-m{display:block; margin:24px 0 8px; font-family:var(--sans); font-size:.88rem; border:1px solid var(--line); background:var(--surface)}
+  details.toc-m summary{padding:11px 14px; cursor:pointer; font-weight:600}
+  details.toc-m .links{padding:0 14px 14px}
+  details.toc-m a{display:block; padding:5px 0; color:var(--ink-2); text-decoration:none; border-bottom:1px solid var(--line-soft)}
+  .manifest-inner{padding:30px 18px 0}
+  main{padding:8px 0 60px}
+}
+</style>
+</head>
+<body>
+
+<header class="manifest">
+  <div class="manifest-inner">
+    <h1>EnRuta</h1>
+    <p class="sub">Plataforma móvil configurable para el seguimiento y la entrega de mercancía desde empresas productoras hacia sus puntos de venta.</p>
+    <div class="fields">
+      <div class="field"><span class="k">Documento</span><span class="v">ERS v1.0</span></div>
+      <div class="field"><span class="k">Norma base</span><span class="v">ISO/IEC/IEEE 29148</span></div>
+      <div class="field"><span class="k">Dominio</span><span class="v">DSD / Route-to-Market</span></div>
+      <div class="field"><span class="k">Modelo</span><span class="v">SaaS multiempresa</span></div>
+      <div class="field"><span class="k">Mercado inicial</span><span class="v">México</span></div>
+      <div class="field"><span class="k">Fecha</span><span class="v">Sep 2026</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+<nav class="toc" aria-label="Contenido del documento">
+  <div class="t">Contenido</div>
+  <a href="#s1">1. Introducción</a>
+  <a href="#s2">2. Investigación de sistemas similares</a>
+  <a href="#s3">3. Visión y propuesta de valor</a>
+  <a href="#s4">4. Actores y roles</a>
+  <a href="#s5">5. Alcance funcional</a>
+  <a href="#s6">6. Requisitos funcionales</a>
+  <a href="#s7">7. Requisitos no funcionales</a>
+  <a href="#s8">8. Reglas de negocio</a>
+  <a href="#s9">9. Arquitectura</a>
+  <a href="#s10">10. Stack tecnológico</a>
+  <a href="#s11">11. Modelo de datos</a>
+  <a href="#s12">12. Configurabilidad</a>
+  <a href="#s13">13. Integraciones</a>
+  <a href="#s14">14. Plan de entrega</a>
+  <a href="#s15">15. Riesgos</a>
+  <a href="#s16">16. Métricas de éxito</a>
+  <a href="#s17">17. Referencias</a>
+</nav>
+
+<main>
+
+<details class="toc-m">
+  <summary>Contenido del documento</summary>
+  <div class="links">
+    <a href="#s1">1. Introducción</a>
+    <a href="#s2">2. Investigación de sistemas similares</a>
+    <a href="#s3">3. Visión y propuesta de valor</a>
+    <a href="#s4">4. Actores y roles</a>
+    <a href="#s5">5. Alcance funcional</a>
+    <a href="#s6">6. Requisitos funcionales</a>
+    <a href="#s7">7. Requisitos no funcionales</a>
+    <a href="#s8">8. Reglas de negocio</a>
+    <a href="#s9">9. Arquitectura</a>
+    <a href="#s10">10. Stack tecnológico</a>
+    <a href="#s11">11. Modelo de datos</a>
+    <a href="#s12">12. Configurabilidad</a>
+    <a href="#s13">13. Integraciones</a>
+    <a href="#s14">14. Plan de entrega</a>
+    <a href="#s15">15. Riesgos</a>
+    <a href="#s16">16. Métricas de éxito</a>
+    <a href="#s17">17. Referencias</a>
+  </div>
+</details>
+
+<!-- ============ 1 ============ -->
+<section id="s1">
+  <h2><span class="num">01</span>Introducción</h2>
+  <hr class="rule">
+
+  <h3>1.1 Propósito</h3>
+  <p class="lead">Este documento especifica el comportamiento esperado de <strong>EnRuta</strong>, una plataforma de software cuyo núcleo es una aplicación móvil para operar y dar seguimiento al ciclo completo de distribución directa a tienda: desde que una empresa productora carga su unidad de reparto hasta que la mercancía queda entregada, documentada y cobrada en el punto de venta.</p>
+  <p>Está dirigido al equipo de desarrollo, a los responsables de producto y a los interesados de negocio de las empresas que adopten la plataforma. Sirve como contrato funcional para la primera versión y como base para estimación, diseño técnico y pruebas de aceptación.</p>
+
+  <h3>1.2 Alcance del producto</h3>
+  <p>EnRuta cubre el modelo de negocio conocido internacionalmente como <em>Direct Store Delivery</em> (DSD) o, en el vocabulario de la distribución en México y Latinoamérica, el circuito de <em>preventa, reparto y liquidación</em>. El sistema abarca:</p>
+  <ul>
+    <li>Planeación y asignación de rutas, clientes y unidades.</li>
+    <li>Toma de pedidos en el punto de venta (preventa) y venta directa desde la unidad (autoventa).</li>
+    <li>Carga del vehículo, control del inventario en tránsito, devoluciones y mermas.</li>
+    <li>Ejecución de la entrega con evidencia verificable: fotografía, firma, ubicación y sello de tiempo.</li>
+    <li>Cobro en ruta, control de crédito y liquidación al cierre de jornada.</li>
+    <li>Emisión de comprobantes fiscales electrónicos y del complemento de traslado exigido en México.</li>
+    <li>Visibilidad para el negocio receptor: qué viene en camino, cuándo llega y qué se recibió realmente.</li>
+    <li>Tablero de control y analítica para supervisión y dirección comercial.</li>
+  </ul>
+  <p>Queda <strong>fuera de alcance</strong> en la versión 1: planeación de producción, gestión de almacén (WMS) más allá del embarque de ruta, contabilidad general, nómina y telemetría de vehículos por hardware dedicado (se integra, no se construye).</p>
+
+  <h3>1.3 Definiciones</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:22%">Término</th><th>Significado en este documento</th></tr></thead>
+    <tbody>
+      <tr><td><strong>DSD</strong></td><td>Entrega directa a tienda. El fabricante o su distribuidor lleva el producto al punto de venta sin pasar por el centro de distribución del minorista.</td></tr>
+      <tr><td><strong>Tenant / empresa</strong></td><td>Cada organización cliente de la plataforma (una panificadora, una embotelladora, una distribuidora regional). Sus datos y su configuración están aislados del resto.</td></tr>
+      <tr><td><strong>Ruta</strong></td><td>Secuencia de clientes asignada a una unidad y a un operador para un día y una frecuencia determinada.</td></tr>
+      <tr><td><strong>Parada / visita</strong></td><td>Cada atención a un cliente dentro de una ruta, con resultado: entregada, parcial, rechazada o no visitada.</td></tr>
+      <tr><td><strong>Preventa</strong></td><td>Levantamiento del pedido en el punto de venta uno o varios días antes del surtido.</td></tr>
+      <tr><td><strong>Autoventa</strong></td><td>Venta y entrega en el mismo momento, con producto ya cargado en la unidad.</td></tr>
+      <tr><td><strong>POD</strong></td><td>Prueba de entrega: el conjunto de evidencias que acredita qué se entregó, a quién, dónde y cuándo.</td></tr>
+      <tr><td><strong>Liquidación</strong></td><td>Cierre de jornada donde se concilian producto cargado, vendido, devuelto, dinero cobrado y depositado.</td></tr>
+      <tr><td><strong>CFDI</strong></td><td>Comprobante Fiscal Digital por Internet, la factura electrónica mexicana.</td></tr>
+      <tr><td><strong>Carta Porte</strong></td><td>Complemento del CFDI que ampara legalmente el traslado de mercancía en territorio nacional.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>1.4 Convenciones</h3>
+  <p>Los requisitos se identifican con la forma <code>RF-XXX-nn</code> (funcionales) y <code>RNF-nn</code> (no funcionales). La prioridad sigue MoSCoW: <span class="pri p-must">Debe</span> obligatorio para la versión 1, <span class="pri p-should">Debería</span> deseable en versión 1, <span class="pri p-could">Podría</span> candidato a versiones posteriores.</p>
+</section>
+
+<!-- ============ 2 ============ -->
+<section id="s2">
+  <h2><span class="num">02</span>Investigación de sistemas similares</h2>
+  <hr class="rule">
+  <p>Antes de definir requisitos se revisó el estado del mercado de software DSD y de automatización de fuerza de ventas (SFA). La categoría está madura: existen desde suites empresariales acopladas a un ERP hasta aplicaciones ligeras de prueba de entrega. El mercado global de software DSD se proyecta en torno a los 1,460 millones de dólares para 2026, y proveedores del sector reportan reducciones de costo de reparto cercanas al 20% cuando se sustituye la operación en papel por captura móvil con optimización de rutas.</p>
+
+  <h3>2.1 Panorama comparativo</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:17%">Sistema</th><th style="width:17%">Perfil</th><th>Qué resuelve bien</th><th style="width:24%">Limitación aprovechable</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>SAP Direct Store Delivery</strong></td>
+        <td>Suite empresarial</td>
+        <td>Integración nativa con finanzas, inventario y CRM del mismo ERP; manejo fiscal multipaís; gestión avanzada de promociones comerciales.</td>
+        <td>Implantación larga y costosa. Solo rentable si la empresa ya vive dentro de ese ERP.</td>
+      </tr>
+      <tr>
+        <td><strong>Oracle NetSuite con extensiones de ruta</strong></td>
+        <td>ERP en la nube</td>
+        <td>Ciclo <em>order-to-cash</em> completo; facturación electrónica emitida desde la unidad, ajustando el documento cuando hay rechazo parcial.</td>
+        <td>La app móvil es un anexo del ERP, no un producto diseñado para el operador de calle.</td>
+      </tr>
+      <tr>
+        <td><strong>Vincle</strong></td>
+        <td>SFA especializado</td>
+        <td>Autoventa, preventa y reparto en un mismo flujo; larga trayectoria con fabricantes de consumo masivo en mercados hispanohablantes.</td>
+        <td>Modelo de licenciamiento y consultoría orientado a corporativos grandes.</td>
+      </tr>
+      <tr>
+        <td><strong>SimplyDepo, Orders in Seconds, eBest Mobile</strong></td>
+        <td>Plataformas DSD nativas en nube</td>
+        <td>Una sola sesión para pedidos, precios, inventario, merchandising, cobros y reportes; optimización de rutas asistida por modelos que consideran ventanas horarias, tráfico y capacidad del vehículo; trazabilidad por lote.</td>
+        <td>Catálogos y flujos pensados para el mercado estadounidense; el cumplimiento fiscal mexicano no es nativo.</td>
+      </tr>
+      <tr>
+        <td><strong>Repsly, VisitBasis, Pepperi</strong></td>
+        <td>Ejecución en punto de venta</td>
+        <td>Auditoría de anaquel, fotografías de exhibición, encuestas y cumplimiento de planogramas.</td>
+        <td>Fuertes en visita comercial, débiles en logística de entrega y conciliación de dinero.</td>
+      </tr>
+      <tr>
+        <td><strong>Onfleet, Track-POD, Detrack, Circuit</strong></td>
+        <td>Prueba de entrega ligera</td>
+        <td>Despacho, seguimiento en vivo, notificación al destinatario y captura de firma con muy poca fricción de adopción.</td>
+        <td>No manejan inventario de la unidad, listas de precios por canal, crédito ni liquidación.</td>
+      </tr>
+      <tr>
+        <td><strong>CONTPAQi, Fiscalcloud y timbradores locales</strong></td>
+        <td>Cumplimiento fiscal MX</td>
+        <td>Emisión y validación de CFDI 4.0 con complemento Carta Porte 3.1 contra catálogos vigentes del SAT.</td>
+        <td>Son piezas fiscales, no plataformas operativas de reparto: conviene integrarlos, no replicarlos.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>2.2 Capacidades que el mercado considera obligatorias</h3>
+  <p>De la revisión anterior se desprende un núcleo común que cualquier producto competitivo debe cubrir. Estas capacidades se convirtieron directamente en requisitos de la sección 6:</p>
+  <ul>
+    <li><strong>Contabilidad de ruta</strong>: conciliar lo cargado, lo vendido, lo entregado, lo devuelto y lo liquidado por cada ruta y cada día.</li>
+    <li><strong>Registro completo de la parada</strong>: campos obligatorios que el operador no puede omitir, porque un registro incompleto se convierte después en una nota de crédito o en una disputa con el cliente.</li>
+    <li><strong>Evidencia verificable</strong>: firma, fotografía, marca de tiempo y validación de ubicación asociadas al documento financiero.</li>
+    <li><strong>Devoluciones y motivos codificados</strong>: cada excepción con una causa de catálogo, no con texto libre, para que finanzas pueda reconciliar rápido.</li>
+    <li><strong>Optimización de secuencia</strong>: respetar ventanas de atención, tiempos de servicio y capacidad del vehículo.</li>
+    <li><strong>Operación sin conexión</strong>: la calle no tiene cobertura garantizada; el dispositivo debe funcionar igual y sincronizar después.</li>
+    <li><strong>Integración hacia el sistema central</strong>: ERP o punto de venta, con datos financieros y de inventario consistentes.</li>
+  </ul>
+
+  <h3>2.3 Dónde está el hueco de mercado</h3>
+  <div class="note">
+    <p style="margin:0"><strong>Hallazgo central.</strong> Las soluciones robustas son caras y rígidas; las baratas son flexibles pero incompletas. Casi ninguna combina tres cosas a la vez: configuración profunda sin escribir código, cumplimiento fiscal mexicano nativo, y una app de calle diseñada para teléfonos económicos con poca batería y poca señal. Ese es el espacio que EnRuta ocupa.</p>
+  </div>
+  <p>La escala del problema en México justifica el enfoque: un solo grupo panificador opera más de 54,000 rutas y atiende alrededor de 3 millones de puntos de venta, mientras el sistema de embotelladores de refrescos coordina cientos de centros de distribución y más de 13,000 rutas de reparto. Debajo de esos corporativos existe una capa muy amplia de distribuidores medianos y regionales que ejecutan exactamente el mismo proceso con papel, mensajería instantánea y hojas de cálculo. Ese es el mercado inicial.</p>
+</section>
+
+<!-- ============ 3 ============ -->
+<section id="s3">
+  <h2><span class="num">03</span>Visión y propuesta de valor</h2>
+  <hr class="rule">
+
+  <h3>3.1 El problema</h3>
+  <p>En la operación tradicional el pedido se levanta en papel y se captura al final del día, cuando el vendedor regresa a la base. Ese retraso impide preparar la carga con anticipación y obliga al almacén a trabajar de noche bajo presión. Peor aún, la factura se imprime antes de que salga la unidad, asumiendo que el cliente recibirá el cien por ciento de la mercancía. La realidad de la calle es otra: envases rotos, producto rechazado por caducidad, tienda cerrada, cliente sin dinero. Cada diferencia entre el papel y lo que realmente pasó se convierte en refacturación, nota de crédito, discusión con el cliente y dinero que tarda semanas en conciliarse.</p>
+
+  <h3>3.2 La propuesta</h3>
+  <p>EnRuta traslada la decisión al momento y al lugar donde ocurre. El operador ajusta la cantidad entregada en el dispositivo, el sistema recalcula el importe, genera el comprobante correcto y registra la evidencia antes de salir del establecimiento. La parada se cierra completa o no se cierra.</p>
+
+  <div class="cols">
+    <div class="card"><h4>Un producto, muchas empresas</h4><p>Una sola base de código atiende a la panificadora, a la embotelladora y a la distribuidora de abarrotes. Lo que cambia entre ellas es configuración, no desarrollo.</p></div>
+    <div class="card"><h4>Diseñado para la calle</h4><p>Funciona sin señal, consume poca batería, se opera con una mano y con guantes, y no exige un teléfono caro.</p></div>
+    <div class="card"><h4>Cumplimiento fiscal incluido</h4><p>CFDI 4.0 y complemento Carta Porte 3.1 emitidos desde la operación, no como un trámite paralelo.</p></div>
+    <div class="card"><h4>El tendero también ve</h4><p>El negocio receptor consulta qué viene en camino, cuándo llega, qué recibió y cuánto debe. Reduce llamadas y disputas.</p></div>
+  </div>
+
+  <h3>3.3 Modelo de negocio</h3>
+  <p>Suscripción mensual por usuario activo de ruta, con escalones por volumen y módulos adicionales facturables (optimización avanzada, analítica predictiva, portal del cliente con marca propia). El costo de timbrado fiscal se traslada por consumo.</p>
+</section>
+
+<!-- ============ 4 ============ -->
+<section id="s4">
+  <h2><span class="num">04</span>Actores y roles</h2>
+  <hr class="rule">
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:20%">Actor</th><th style="width:16%">Interfaz</th><th>Responsabilidad principal</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Repartidor / operador</strong></td><td>App móvil</td><td>Ejecuta la ruta: recibe carga, entrega, captura devoluciones, cobra y liquida.</td></tr>
+      <tr><td><strong>Preventista / vendedor</strong></td><td>App móvil</td><td>Visita clientes, levanta pedidos, negocia promociones, audita exhibición y gestiona cartera.</td></tr>
+      <tr><td><strong>Supervisor de ruta</strong></td><td>Web + móvil</td><td>Monitorea avance en vivo, atiende excepciones, autoriza descuentos y reprogramaciones.</td></tr>
+      <tr><td><strong>Jefe de almacén / embarcador</strong></td><td>Web + móvil</td><td>Prepara y confirma la carga de cada unidad; recibe devoluciones al cierre.</td></tr>
+      <tr><td><strong>Administrador de la empresa</strong></td><td>Web</td><td>Configura catálogos, precios, rutas, roles, formularios y apariencia de su organización.</td></tr>
+      <tr><td><strong>Analista comercial / dirección</strong></td><td>Web</td><td>Consulta indicadores de cobertura, cumplimiento, devoluciones y rentabilidad por ruta.</td></tr>
+      <tr><td><strong>Cliente / negocio receptor</strong></td><td>App móvil o web ligera</td><td>Consulta entregas en camino, confirma recepción, reporta faltantes, revisa su estado de cuenta y pide reabasto.</td></tr>
+      <tr><td><strong>Operador de la plataforma</strong></td><td>Consola interna</td><td>Alta de nuevas empresas, límites de servicio, soporte y monitoreo técnico.</td></tr>
+      <tr><td><strong>Sistemas externos</strong></td><td>API</td><td>ERP, timbrador fiscal, pasarela de pagos, proveedor de mapas y telemetría de flota.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section id="s5">
+  <h2><span class="num">05</span>Alcance funcional</h2>
+  <hr class="rule">
+  <p>El sistema se organiza en catorce módulos. Cada empresa activa solo los que necesita; un distribuidor pequeño puede operar únicamente con rutas, entrega y cobro, mientras una embotelladora enciende además preventa, promociones, activos en comodato y auditoría de anaquel.</p>
+
+  <pre class="mermaid">
+flowchart LR
+  A["Preventa<br/>pedido en tienda"] --> B["Planeación<br/>consolida y optimiza"]
+  B --> C["Embarque<br/>carga de unidad"]
+  C --> D["Reparto<br/>entrega + evidencia"]
+  D --> E["Cobro<br/>efectivo / transferencia / crédito"]
+  E --> F["Liquidación<br/>conciliación de jornada"]
+  D -.->|devolución| C
+  D -.->|CFDI + Carta Porte| G["Timbrado fiscal"]
+  F --> H["ERP / contabilidad"]
+  </pre>
+  <p class="tiny">Flujo principal del ciclo comercial. Las líneas punteadas representan procesos que ocurren dentro de la parada pero se resuelven contra sistemas externos.</p>
+</section>
+
+<!-- ============ 6 ============ -->
+<section id="s6">
+  <h2><span class="num">06</span>Requisitos funcionales</h2>
+  <hr class="rule">
+
+  <h3>6.1 Administración de la empresa <span style="font-family:var(--mono);font-size:.8rem;color:var(--ink-3)">· ADM</span></h3>
+  <div class="tw"><table>
+    <thead><tr><th class="id">ID</th><th>Requisito</th><th style="width:13%">Prioridad</th><th style="width:26%">Criterio de aceptación</th></tr></thead>
+    <tbody>
+      <tr><td class="id"><span class="rid">RF-ADM-01</span></td><td>El sistema debe permitir dar de alta una empresa con su identidad fiscal, zonas horarias, moneda y unidades de medida.</td><td><span class="pri p-must">Debe</span></td><td>Una empresa nueva queda operativa sin intervención de desarrollo.</td></tr>
+      <tr><td class="id"><span class="rid">RF-ADM-02</span></td><td>Debe permitir definir jerarquía organizacional: empresa, centro de distribución, zona, ruta.</td><td><span class="pri p-must">Debe</span></td><td>Cada usuario ve solo los niveles que le corresponden.</td></tr>
+      <tr><td class="id"><span class="rid">RF-ADM-03</span></td><td>Debe permitir activar y desactivar módulos por empresa mediante interruptores de funcionalidad.</td><td><span class="pri p-must">Debe</span></td><td>Al desactivar un módulo, sus pantallas desaparecen de la app sin requerir nueva versión.</td></tr>
+      <tr><td class="id"><span class="rid">RF-ADM-04</span></td><td>Debe permitir personalizar logotipo, color principal y nombre visible de la aplicación por empresa.</td><td><span class="pri p-must">Debe</span></td><td>La app muestra la identidad de la empresa tras iniciar sesión.</td></tr>
+      <tr><td class="id"><span class="rid">RF-ADM-05</span></td><td>Debe permitir crear roles con permisos granulares por acción y por módulo.</td><td><span class="pri p-must">Debe</span></td><td>Un rol sin permiso de descuento no ve el control de descuento.</td></tr>
+      <tr><td class="id"><span class="rid">RF-ADM-06</span></td><td>Debe permitir definir campos adicionales en clientes, productos y visitas sin modificar el código.</td><td><span class="pri p-should">Debería</span></td><td>Un campo nuevo aparece en la app tras sincronizar.</td></tr>
+      <tr><td class="id"><span class="rid">RF-ADM-07</span></td><td>Debe registrar en bitácora toda modificación de configuración con usuario, fecha y valor anterior.</td><td><span class="pri p-must">Debe</span></td><td>La bitácora es consultable y exportable.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>6.2 Catálogos maestros <span style="font-family:var(--mono);font-size:.8rem;color:var(--ink-3)">· CAT</span></h3>
+  <div class="tw"><table>
+    <thead><tr><th class="id">ID</th><th>Requisito</th><th style="width:13%">Prioridad</th><th style="width:26%">Criterio de aceptación</th></tr></thead>
+    <tbody>
+      <tr><td class="id"><span class="rid">RF-CAT-01</span></td><td>Debe gestionar el catálogo de productos con presentación, factor de conversión caja–pieza, código de barras, peso y clave fiscal.</td><td><span class="pri p-must">Debe</span></td><td>Un producto puede venderse en caja y devolverse en pieza con conversión automática.</td></tr>
+      <tr><td class="id"><span class="rid">RF-CAT-02</span></td><td>Debe gestionar clientes con ubicación geográfica, canal, horario de atención, días de visita y datos fiscales.</td><td><span class="pri p-must">Debe</span></td><td>El cliente aparece en la ruta del día correcto.</td></tr>
+      <tr><td class="id"><span class="rid">RF-CAT-03</span></td><td>Debe soportar múltiples listas de precios asignables por canal, zona, cliente o vigencia.</td><td><span class="pri p-must">Debe</span></td><td>Dos clientes distintos ven precios distintos del mismo producto.</td></tr>
+      <tr><td class="id"><span class="rid">RF-CAT-04</span></td><td>Debe soportar promociones por volumen, combo, producto gratis y descuento porcentual, con vigencia y tope.</td><td><span class="pri p-should">Debería</span></td><td>La promoción se aplica sola al cumplirse la condición y se muestra al operador.</td></tr>
+      <tr><td class="id"><span class="rid">RF-CAT-05</span></td><td>Debe gestionar catálogos de motivos: devolución, no entrega, ajuste de inventario y cancelación.</td><td><span class="pri p-must">Debe</span></td><td>Toda excepción queda clasificada con un motivo del catálogo.</td></tr>
+      <tr><td class="id"><span class="rid">RF-CAT-06</span></td><td>Debe manejar control por lote y fecha de caducidad para productos perecederos.</td><td><span class="pri p-should">Debería</span></td><td>Es posible rastrear en qué clientes quedó un lote específico.</td></tr>
+      <tr><td class="id"><span class="rid">RF-CAT-07</span></td><td>Debe gestionar activos en comodato asignados a clientes (refrigeradores, exhibidores, envase retornable).</td><td><span class="pri p-could">Podría</span></td><td>Se consulta el inventario de activos por cliente y su última verificación.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>6.3 Rutas y planeación <span style="font-family:var(--mono);font-size:.8rem;color:var(--ink-3)">· RUT</span></h3>
+  <div class="tw"><table>
+    <thead><tr><th class="id">ID</th><th>Requisito</th><th style="width:13%">Prioridad</th><th style="width:26%">Criterio de aceptación</th></tr></thead>
+    <tbody>
+      <tr><td class="id"><span class="rid">RF-RUT-01</span></td><td>Debe permitir definir rutas con clientes, secuencia sugerida, frecuencia de visita y unidad asignada.</td><td><span class="pri p-must">Debe</span></td><td>La ruta se genera automáticamente cada día según su frecuencia.</td></tr>
+      <tr><td class="id"><span class="rid">RF-RUT-02</span></td><td>Debe optimizar la secuencia de paradas considerando ventanas de atención, tiempo de servicio, capacidad y carga del vehículo.</td><td><span class="pri p-must">Debe</span></td><td>La secuencia optimizada reduce la distancia total frente a la secuencia manual en un conjunto de prueba.</td></tr>
+      <tr><td class="id"><span class="rid">RF-RUT-03</span></td><td>Debe permitir reasignar clientes entre rutas y reprogramar visitas con registro de quién autorizó el cambio.</td><td><span class="pri p-must">Debe</span></td><td>El cambio se refleja en el dispositivo del operador en la siguiente sincronización.</td></tr>
+      <tr><td class="id"><span class="rid">RF-RUT-04</span></td><td>Debe calcular y publicar una hora estimada de llegada por parada, actualizada conforme avanza la ruta.</td><td><span class="pri p-should">Debería</span></td><td>El cliente ve una estimación que se ajusta cuando la ruta se retrasa.</td></tr>
+      <tr><td class="id"><span class="rid">RF-RUT-05</span></td><td>Debe permitir simular escenarios de ruta antes de publicarlos.</td><td><span class="pri p-could">Podría</span></td><td>El planeador compara dos configuraciones antes de aplicar una.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>6.4 Preventa y toma de pedidos <span style="font-family:var(--mono);font-size:.8rem;color:var(--ink-3)">· PED</span></h3>
+  <div class="tw"><table>
+    <thead><tr><th class="id">ID</th><th>Requisito</th><th style="width:13%">Prioridad</th><th style="width:26%">Criterio de aceptación</th></tr></thead>
+    <tbody>
+      <tr><td class="id"><span class="rid">RF-PED-01</span></td><td>Debe permitir capturar un pedido en el punto de venta con el catálogo y los precios vigentes del cliente, incluso sin conexión.</td><td><span class="pri p-must">Debe</span></td><td>El pedido se guarda localmente y se envía al recuperar señal.</td></tr>
+      <tr><td class="id"><span class="rid">RF-PED-02</span></td><td>Debe sugerir un pedido base a partir del histórico de compra y la rotación del cliente.</td><td><span class="pri p-should">Debería</span></td><td>El operador acepta o ajusta la sugerencia en un solo paso.</td></tr>
+      <tr><td class="id"><span class="rid">RF-PED-03</span></td><td>Debe permitir búsqueda de producto por nombre, clave y lectura de código de barras con la cámara.</td><td><span class="pri p-must">Debe</span></td><td>Un producto se agrega en menos de tres toques.</td></tr>
+      <tr><td class="id"><span class="rid">RF-PED-04</span></td><td>Debe validar el pedido contra el límite de crédito y el saldo vencido del cliente.</td><td><span class="pri p-must">Debe</span></td><td>Un cliente con saldo vencido requiere autorización explícita del supervisor.</td></tr>
+      <tr><td class="id"><span class="rid">RF-PED-05</span></td><td>Debe permitir que el propio negocio levante su pedido desde la app de cliente.</td><td><span class="pri p-should">Debería</span></td><td>El pedido del cliente entra al mismo flujo que el de preventa.</td></tr>
+      <tr><td class="id"><span class="rid">RF-PED-06</span></td><td>Debe consolidar los pedidos del día en una orden de carga por unidad.</td><td><span class="pri p-must">Debe</span></td><td>El almacén recibe la orden de carga antes del horario de embarque configurado.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>6.5 Inventario de la unidad <span style="font-family:var(--mono);font-size:.8rem;color:var(--ink-3)">· INV</span></h3>
+  <div class="tw"><table>
+    <thead><tr><th class="id">ID</th><th>Requisito</th><th style="width:13%">Prioridad</th><th style="width:26%">Criterio de aceptación</th></tr></thead>
+    <tbody>
+      <tr><td class="id"><span class="rid">RF-INV-01</span></td><td>Debe registrar la carga inicial de la unidad y requerir confirmación del operador antes de iniciar la ruta.</td><td><span class="pri p-must">Debe</span></td><td>La ruta no inicia sin carga confirmada o sin registrar la diferencia.</td></tr>
+      <tr><td class="id"><span class="rid">RF-INV-02</span></td><td>Debe descontar el inventario de la unidad en tiempo real conforme se entrega.</td><td><span class="pri p-must">Debe</span></td><td>El operador consulta su existencia disponible en cualquier momento.</td></tr>
+      <tr><td class="id"><span class="rid">RF-INV-03</span></td><td>Debe impedir comprometer más producto del que existe físicamente en la unidad, salvo autorización.</td><td><span class="pri p-must">Debe</span></td><td>El sistema bloquea la captura y explica cuánto hay disponible.</td></tr>
+      <tr><td class="id"><span class="rid">RF-INV-04</span></td><td>Debe registrar devoluciones clasificadas por motivo, estado del producto y lote.</td><td><span class="pri p-must">Debe</span></td><td>La devolución afecta inventario y documento financiero en el mismo movimiento.</td></tr>
+      <tr><td class="id"><span class="rid">RF-INV-05</span></td><td>Debe registrar merma y producto dañado con evidencia fotográfica obligatoria.</td><td><span class="pri p-should">Debería</span></td><td>No se puede cerrar un registro de merma sin fotografía.</td></tr>
+      <tr><td class="id"><span class="rid">RF-INV-06</span></td><td>Debe permitir transferencias de producto entre unidades en campo con doble confirmación.</td><td><span class="pri p-could">Podría</span></td><td>Ambos operadores confirman y ambos inventarios se ajustan.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>6.6 Entrega y evidencia <span style="font-family:var(--mono);font-size:.8rem;color:var(--ink-3)">· ENT</span></h3>
+  <div class="tw"><table>
+    <thead><tr><th class="id">ID</th><th>Requisito</th><th style="width:13%">Prioridad</th><th style="width:26%">Criterio de aceptación</th></tr></thead>
+    <tbody>
+      <tr><td class="id"><span class="rid">RF-ENT-01</span></td><td>Debe mostrar al operador la ruta del día con estado, secuencia, avance y navegación hacia cada parada.</td><td><span class="pri p-must">Debe</span></td><td>La lista funciona completa sin conexión.</td></tr>
+      <tr><td class="id"><span class="rid">RF-ENT-02</span></td><td>Debe registrar la llegada a la parada capturando ubicación y hora del dispositivo.</td><td><span class="pri p-must">Debe</span></td><td>Si la distancia al cliente supera el umbral configurado, se marca como atención fuera de sitio.</td></tr>
+      <tr><td class="id"><span class="rid">RF-ENT-03</span></td><td>Debe permitir entrega total, parcial o rechazo, ajustando cantidades línea por línea.</td><td><span class="pri p-must">Debe</span></td><td>El importe se recalcula y se muestra antes de confirmar.</td></tr>
+      <tr><td class="id"><span class="rid">RF-ENT-04</span></td><td>Debe capturar evidencia de entrega: firma del receptor, nombre, al menos una fotografía, coordenadas y sello de tiempo.</td><td><span class="pri p-must">Debe</span></td><td>La parada no se cierra si falta un campo marcado como obligatorio para esa empresa.</td></tr>
+      <tr><td class="id"><span class="rid">RF-ENT-05</span></td><td>Debe exigir un motivo del catálogo y evidencia cuando la entrega no se concreta.</td><td><span class="pri p-must">Debe</span></td><td>La no entrega genera una tarea de reprogramación.</td></tr>
+      <tr><td class="id"><span class="rid">RF-ENT-06</span></td><td>Debe permitir capturar auditoría de exhibición con fotografía y respuestas a un formulario configurable.</td><td><span class="pri p-should">Debería</span></td><td>El formulario se define desde la web sin nueva versión de la app.</td></tr>
+      <tr><td class="id"><span class="rid">RF-ENT-07</span></td><td>Debe entregar al cliente un comprobante digital de la entrega por mensaje o correo.</td><td><span class="pri p-should">Debería</span></td><td>El comprobante contiene el detalle recibido y la evidencia.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>6.7 Cobro y liquidación <span style="font-family:var(--mono);font-size:.8rem;color:var(--ink-3)">· COB</span></h3>
+  <div class="tw"><table>
+    <thead><tr><th class="id">ID</th><th>Requisito</th><th style="width:13%">Prioridad</th><th style="width:26%">Criterio de aceptación</th></tr></thead>
+    <tbody>
+      <tr><td class="id"><span class="rid">RF-COB-01</span></td><td>Debe registrar cobros en efectivo, transferencia, tarjeta y a crédito, con folio y evidencia cuando aplique.</td><td><span class="pri p-must">Debe</span></td><td>Cada cobro queda ligado a uno o varios documentos.</td></tr>
+      <tr><td class="id"><span class="rid">RF-COB-02</span></td><td>Debe mostrar el estado de cuenta del cliente al momento de la visita, incluyendo documentos vencidos.</td><td><span class="pri p-must">Debe</span></td><td>La información está disponible sin conexión con el corte de la última sincronización.</td></tr>
+      <tr><td class="id"><span class="rid">RF-COB-03</span></td><td>Debe generar la liquidación de jornada comparando carga, ventas, devoluciones, cobros y efectivo declarado.</td><td><span class="pri p-must">Debe</span></td><td>El sistema muestra las diferencias antes de permitir el cierre.</td></tr>
+      <tr><td class="id"><span class="rid">RF-COB-04</span></td><td>Debe requerir justificación y aprobación del supervisor cuando exista diferencia superior al umbral configurado.</td><td><span class="pri p-must">Debe</span></td><td>Sin aprobación, la jornada queda en estado pendiente.</td></tr>
+      <tr><td class="id"><span class="rid">RF-COB-05</span></td><td>Debe permitir adjuntar el comprobante de depósito bancario del efectivo.</td><td><span class="pri p-should">Debería</span></td><td>El depósito se concilia contra el cobro registrado.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>6.8 Cumplimiento fiscal <span style="font-family:var(--mono);font-size:.8rem;color:var(--ink-3)">· FIS</span></h3>
+  <div class="tw"><table>
+    <thead><tr><th class="id">ID</th><th>Requisito</th><th style="width:13%">Prioridad</th><th style="width:26%">Criterio de aceptación</th></tr></thead>
+    <tbody>
+      <tr><td class="id"><span class="rid">RF-FIS-01</span></td><td>Debe emitir CFDI 4.0 de ingreso o traslado a través de un proveedor autorizado de certificación.</td><td><span class="pri p-must">Debe</span></td><td>El comprobante se timbra y se entrega en XML y representación impresa.</td></tr>
+      <tr><td class="id"><span class="rid">RF-FIS-02</span></td><td>Debe generar el complemento Carta Porte en su versión vigente antes de que inicie el traslado, con origen, destino, mercancías y figura de transporte.</td><td><span class="pri p-must">Debe</span></td><td>La unidad no puede marcarse como "en ruta" sin comprobante timbrado.</td></tr>
+      <tr><td class="id"><span class="rid">RF-FIS-03</span></td><td>Debe validar claves de producto, códigos postales y datos del vehículo contra los catálogos oficiales antes de solicitar el timbrado.</td><td><span class="pri p-must">Debe</span></td><td>Los errores se muestran en lenguaje claro antes de enviar.</td></tr>
+      <tr><td class="id"><span class="rid">RF-FIS-04</span></td><td>Debe recalcular y reemitir el comprobante cuando la entrega resulte parcial, o emitir la nota de crédito correspondiente.</td><td><span class="pri p-must">Debe</span></td><td>No queda ningún documento timbrado por mercancía no entregada.</td></tr>
+      <tr><td class="id"><span class="rid">RF-FIS-05</span></td><td>Debe conservar los comprobantes y sus acuses durante el plazo legal y permitir su consulta y descarga.</td><td><span class="pri p-must">Debe</span></td><td>Cualquier documento de los últimos cinco años es recuperable.</td></tr>
+      <tr><td class="id"><span class="rid">RF-FIS-06</span></td><td>Debe aislar la lógica fiscal en un módulo reemplazable por país.</td><td><span class="pri p-should">Debería</span></td><td>Cambiar de país no exige modificar los módulos operativos.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>6.9 App del negocio receptor <span style="font-family:var(--mono);font-size:.8rem;color:var(--ink-3)">· CLI</span></h3>
+  <div class="tw"><table>
+    <thead><tr><th class="id">ID</th><th>Requisito</th><th style="width:13%">Prioridad</th><th style="width:26%">Criterio de aceptación</th></tr></thead>
+    <tbody>
+      <tr><td class="id"><span class="rid">RF-CLI-01</span></td><td>Debe mostrar al negocio los pedidos pendientes, su estado y la hora estimada de llegada.</td><td><span class="pri p-must">Debe</span></td><td>El estado cambia sin que el usuario recargue.</td></tr>
+      <tr><td class="id"><span class="rid">RF-CLI-02</span></td><td>Debe permitir confirmar la recepción y reportar faltantes o producto dañado con fotografía.</td><td><span class="pri p-must">Debe</span></td><td>El reporte genera un caso visible para el supervisor.</td></tr>
+      <tr><td class="id"><span class="rid">RF-CLI-03</span></td><td>Debe mostrar el historial de entregas y el estado de cuenta del negocio.</td><td><span class="pri p-must">Debe</span></td><td>El negocio descarga su comprobante de cualquier entrega pasada.</td></tr>
+      <tr><td class="id"><span class="rid">RF-CLI-04</span></td><td>Debe permitir solicitar reabasto fuera de la frecuencia habitual.</td><td><span class="pri p-should">Debería</span></td><td>La solicitud llega al preventista responsable.</td></tr>
+      <tr><td class="id"><span class="rid">RF-CLI-05</span></td><td>Debe notificar por mensaje cuando la unidad esté próxima a llegar.</td><td><span class="pri p-should">Debería</span></td><td>La notificación se envía según el umbral configurado por la empresa.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>6.10 Seguimiento, analítica y sincronización <span style="font-family:var(--mono);font-size:.8rem;color:var(--ink-3)">· SEG / SYN</span></h3>
+  <div class="tw"><table>
+    <thead><tr><th class="id">ID</th><th>Requisito</th><th style="width:13%">Prioridad</th><th style="width:26%">Criterio de aceptación</th></tr></thead>
+    <tbody>
+      <tr><td class="id"><span class="rid">RF-SEG-01</span></td><td>Debe mostrar en un mapa la posición y el avance de todas las unidades activas.</td><td><span class="pri p-must">Debe</span></td><td>La posición se actualiza con la periodicidad configurada.</td></tr>
+      <tr><td class="id"><span class="rid">RF-SEG-02</span></td><td>Debe generar alertas por retraso, desvío de ruta, parada prolongada y visita fuera de sitio.</td><td><span class="pri p-must">Debe</span></td><td>La alerta llega al supervisor responsable de esa ruta.</td></tr>
+      <tr><td class="id"><span class="rid">RF-SEG-03</span></td><td>Debe ofrecer indicadores por ruta, operador, cliente y producto: cobertura, efectividad de visita, porcentaje de devolución, tiempo por parada y venta promedio.</td><td><span class="pri p-must">Debe</span></td><td>Los indicadores son filtrables y exportables.</td></tr>
+      <tr><td class="id"><span class="rid">RF-SEG-04</span></td><td>Debe permitir exportar cualquier reporte a hoja de cálculo y programar su envío periódico.</td><td><span class="pri p-should">Debería</span></td><td>El envío programado llega a los destinatarios configurados.</td></tr>
+      <tr><td class="id"><span class="rid">RF-SYN-01</span></td><td>La app móvil debe operar la jornada completa sin conexión: consulta de catálogo, captura de pedido, entrega, evidencia y cobro.</td><td><span class="pri p-must">Debe</span></td><td>Una jornada completa en modo avión sincroniza sin pérdida de datos.</td></tr>
+      <tr><td class="id"><span class="rid">RF-SYN-02</span></td><td>Debe mantener una cola persistente de operaciones pendientes que sobreviva al reinicio del dispositivo y a la falta de batería.</td><td><span class="pri p-must">Debe</span></td><td>Tras reiniciar, las operaciones pendientes siguen en cola.</td></tr>
+      <tr><td class="id"><span class="rid">RF-SYN-03</span></td><td>Debe resolver conflictos de sincronización con reglas explícitas y dejar constancia de cada resolución.</td><td><span class="pri p-must">Debe</span></td><td>Ningún dato de campo se descarta en silencio.</td></tr>
+      <tr><td class="id"><span class="rid">RF-SYN-04</span></td><td>Debe sincronizar por diferencias y comprimir la carga útil, priorizando evidencias pesadas cuando haya buena conexión.</td><td><span class="pri p-should">Debería</span></td><td>La sincronización diaria típica consume menos de 20 MB por dispositivo.</td></tr>
+      <tr><td class="id"><span class="rid">RF-SYN-05</span></td><td>Debe indicar siempre en pantalla el estado de conexión y el número de operaciones pendientes de envío.</td><td><span class="pri p-must">Debe</span></td><td>El indicador es visible desde cualquier pantalla operativa.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ============ 7 ============ -->
+<section id="s7">
+  <h2><span class="num">07</span>Requisitos no funcionales</h2>
+  <hr class="rule">
+  <div class="tw"><table>
+    <thead><tr><th class="id">ID</th><th style="width:16%">Categoría</th><th>Requisito y métrica</th></tr></thead>
+    <tbody>
+      <tr><td class="id"><span class="rid">RNF-01</span></td><td>Rendimiento móvil</td><td>La pantalla de ruta del día abre en menos de 1.5 s con 200 paradas cargadas, en un dispositivo Android de gama baja con 3 GB de memoria.</td></tr>
+      <tr><td class="id"><span class="rid">RNF-02</span></td><td>Rendimiento móvil</td><td>La búsqueda dentro de un catálogo de 20,000 productos devuelve resultados en menos de 300 ms de forma local.</td></tr>
+      <tr><td class="id"><span class="rid">RNF-03</span></td><td>Rendimiento servidor</td><td>El percentil 95 de las llamadas de lectura responde en menos de 400 ms con 500 rutas concurrentes.</td></tr>
+      <tr><td class="id"><span class="rid">RNF-04</span></td><td>Consumo</td><td>Una jornada de 10 horas con seguimiento activo consume como máximo el 35% de una batería de 4,000 mAh.</td></tr>
+      <tr><td class="id"><span class="rid">RNF-05</span></td><td>Almacenamiento</td><td>La base local no excede 500 MB con 90 días de historial; los datos más antiguos se purgan automáticamente.</td></tr>
+      <tr><td class="id"><span class="rid">RNF-06</span></td><td>Disponibilidad</td><td>99.5% mensual para los servicios en línea. La app móvil conserva funcionalidad operativa completa aunque el servidor esté caído.</td></tr>
+      <tr><td class="id"><span class="rid">RNF-07</span></td><td>Escalabilidad</td><td>Arquitectura capaz de crecer horizontalmente hasta 50,000 dispositivos activos sin rediseño.</td></tr>
+      <tr><td class="id"><span class="rid">RNF-08</span></td><td>Aislamiento</td><td>Ninguna consulta puede devolver datos de una empresa distinta a la del usuario autenticado. Se verifica con pruebas automatizadas de frontera en cada despliegue.</td></tr>
+      <tr><td class="id"><span class="rid">RNF-09</span></td><td>Seguridad</td><td>Cifrado en tránsito con TLS 1.3, cifrado en reposo del almacenamiento local y de las evidencias. Autenticación con token de corta duración y refresco.</td></tr>
+      <tr><td class="id"><span class="rid">RNF-10</span></td><td>Seguridad</td><td>Borrado remoto del contenido de la app ante pérdida del dispositivo o baja del empleado.</td></tr>
+      <tr><td class="id"><span class="rid">RNF-11</span></td><td>Auditoría</td><td>Toda operación con efecto financiero o de inventario queda registrada de forma inmutable con usuario, dispositivo, momento y ubicación.</td></tr>
+      <tr><td class="id"><span class="rid">RNF-12</span></td><td>Privacidad</td><td>Cumplimiento de la ley mexicana de protección de datos personales: aviso de privacidad, propósito declarado del rastreo de ubicación y derechos del titular atendibles desde la plataforma.</td></tr>
+      <tr><td class="id"><span class="rid">RNF-13</span></td><td>Usabilidad</td><td>Las acciones frecuentes se completan con una sola mano. Objetivos táctiles de al menos 48 dp y contraste mínimo 4.5:1, legible bajo luz solar directa.</td></tr>
+      <tr><td class="id"><span class="rid">RNF-14</span></td><td>Usabilidad</td><td>Un operador nuevo completa su primera ruta con menos de 30 minutos de capacitación.</td></tr>
+      <tr><td class="id"><span class="rid">RNF-15</span></td><td>Compatibilidad</td><td>Android 9 o superior e iOS 15 o superior. Android es la plataforma prioritaria por el perfil de dispositivo del personal de campo.</td></tr>
+      <tr><td class="id"><span class="rid">RNF-16</span></td><td>Localización</td><td>Interfaz en español e inglés, con formatos de moneda, fecha y número por región. El texto de la interfaz no se escribe fijo en el código.</td></tr>
+      <tr><td class="id"><span class="rid">RNF-17</span></td><td>Mantenibilidad</td><td>Cobertura de pruebas automatizadas mínima del 70% en la lógica de negocio y del 100% en cálculo de precios, impuestos y sincronización.</td></tr>
+      <tr><td class="id"><span class="rid">RNF-18</span></td><td>Portabilidad</td><td>El módulo fiscal, el de mapas y el de pagos se consumen mediante interfaces, de modo que el proveedor pueda sustituirse sin tocar el resto del sistema.</td></tr>
+      <tr><td class="id"><span class="rid">RNF-19</span></td><td>Observabilidad</td><td>Trazas distribuidas, registro estructurado y alertas sobre tasa de error de sincronización por empresa y por versión de la app.</td></tr>
+      <tr><td class="id"><span class="rid">RNF-20</span></td><td>Respaldo</td><td>Respaldo diario con recuperación comprobada. Objetivo de tiempo de recuperación de 4 horas y de punto de recuperación de 15 minutos.</td></tr>
+      <tr><td class="id"><span class="rid">RNF-21</span></td><td>Accesibilidad</td><td>Compatible con lector de pantalla del sistema y con tamaño de fuente aumentado sin pérdida de funcionalidad.</td></tr>
+      <tr><td class="id"><span class="rid">RNF-22</span></td><td>Actualización</td><td>Los cambios de configuración y de formularios se aplican sin publicar una nueva versión en la tienda de aplicaciones.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ============ 8 ============ -->
+<section id="s8">
+  <h2><span class="num">08</span>Reglas de negocio</h2>
+  <hr class="rule">
+  <div class="tw"><table>
+    <thead><tr><th class="id">ID</th><th>Regla</th></tr></thead>
+    <tbody>
+      <tr><td class="id"><span class="rid">RN-01</span></td><td>Una parada solo puede cerrarse si todos los campos marcados como obligatorios por la empresa fueron capturados.</td></tr>
+      <tr><td class="id"><span class="rid">RN-02</span></td><td>El precio aplicado es el vigente en la lista asignada al cliente en la fecha de la operación, no en la fecha de sincronización.</td></tr>
+      <tr><td class="id"><span class="rid">RN-03</span></td><td>Una entrega parcial genera siempre un documento financiero que corresponde exactamente a lo recibido.</td></tr>
+      <tr><td class="id"><span class="rid">RN-04</span></td><td>El inventario de la unidad nunca puede quedar negativo; cualquier diferencia se registra como ajuste con motivo y responsable.</td></tr>
+      <tr><td class="id"><span class="rid">RN-05</span></td><td>Un cliente con saldo vencido por encima del umbral solo puede recibir mercancía con autorización registrada de un supervisor.</td></tr>
+      <tr><td class="id"><span class="rid">RN-06</span></td><td>La jornada no se cierra mientras existan paradas sin resultado o diferencias de efectivo sin justificar.</td></tr>
+      <tr><td class="id"><span class="rid">RN-07</span></td><td>La evidencia de entrega es inmutable: una corrección genera un registro nuevo vinculado al original, nunca lo sobrescribe.</td></tr>
+      <tr><td class="id"><span class="rid">RN-08</span></td><td>El comprobante fiscal de traslado debe existir y estar timbrado antes de que la unidad se marque en ruta.</td></tr>
+      <tr><td class="id"><span class="rid">RN-09</span></td><td>Ante conflicto de sincronización sobre un mismo documento, prevalece el registro de campo con marca de tiempo del dispositivo, y el servidor conserva la versión descartada para revisión.</td></tr>
+      <tr><td class="id"><span class="rid">RN-10</span></td><td>Los productos perecederos se surten por caducidad más próxima primero, salvo indicación contraria del cliente.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ============ 9 ============ -->
+<section id="s9">
+  <h2><span class="num">09</span>Arquitectura</h2>
+  <hr class="rule">
+
+  <h3>9.1 Panorama</h3>
+  <pre class="mermaid">
+flowchart TB
+  subgraph Campo["Dispositivos en campo"]
+    M1["App repartidor<br/>SQLite local"]
+    M2["App preventista"]
+    M3["App del negocio"]
+  end
+  subgraph Nube["Plataforma en la nube"]
+    GW["API Gateway<br/>autenticación + contexto de empresa"]
+    S1["Servicio de operación<br/>rutas, visitas, entregas"]
+    S2["Servicio comercial<br/>catálogo, precios, promociones"]
+    S3["Servicio financiero<br/>cobros, liquidación"]
+    S4["Servicio de sincronización"]
+    S5["Servicio fiscal"]
+    Q["Bus de eventos"]
+    DB[("PostgreSQL<br/>seguridad a nivel de fila")]
+    OBJ[("Almacén de objetos<br/>fotos y firmas")]
+  end
+  subgraph Ext["Servicios externos"]
+    E1["Timbrador CFDI"]
+    E2["Mapas y optimización"]
+    E3["ERP del cliente"]
+    E4["Pagos y mensajería"]
+  end
+  Campo --> GW --> S1 & S2 & S3 & S4 & S5
+  S1 & S2 & S3 & S5 --> DB
+  S4 --> DB
+  S1 --> OBJ
+  S1 & S3 --> Q --> E3
+  S5 --> E1
+  S1 --> E2
+  S3 --> E4
+  </pre>
+
+  <h3>9.2 Decisiones estructurales</h3>
+  <h4>Local primero, no caché</h4>
+  <p>La base de datos del dispositivo es la fuente de verdad durante la jornada. Toda lectura de la interfaz va contra el almacenamiento local y toda escritura se aplica localmente antes de encolarse. El servidor es un par con el que se reconcilia, no una dependencia para operar. Esta decisión es la que más condiciona el diseño y debe tomarse al inicio: agregar sincronización a un sistema construido en línea es una reescritura, no un ajuste.</p>
+
+  <h4>Multiempresa con esquema compartido</h4>
+  <p>Base de datos y esquema compartidos, con una columna de empresa en cada tabla y seguridad a nivel de fila en PostgreSQL. El contexto de empresa se establece una sola vez por petición como valor de sesión del lado del servidor, y la política de fila lo lee; no se pasa a mano entre capas, porque ese es justamente el lugar donde ocurren las fugas. La columna de empresa va primero en todo índice compuesto. Para clientes corporativos que exijan aislamiento físico se ofrece una instancia dedicada usando el mismo código.</p>
+
+  <h4>Configuración sobre código</h4>
+  <p>Ninguna petición de un cliente debe terminar en una rama del código. Las diferencias entre una panificadora y una embotelladora se expresan como metadatos: módulos encendidos, catálogos, formularios, reglas de validación y apariencia. Esta es la condición para que la plataforma sea realmente "mutable" y siga siendo mantenible con cientos de empresas.</p>
+
+  <h4>Resolución de conflictos sin sobreingeniería</h4>
+  <p>La mayoría de los conflictos reales se resuelven con "última escritura gana" más validación del lado del servidor. Las estructuras de datos libres de conflicto resuelven edición colaborativa simultánea, que no es el caso aquí: dos repartidores no editan la misma entrega. Se aplican reglas explícitas por tipo de documento y se conserva siempre la versión descartada.</p>
+</section>
+
+<!-- ============ 10 ============ -->
+<section id="s10">
+  <h2><span class="num">10</span>Stack tecnológico</h2>
+  <hr class="rule">
+  <p>La selección prioriza tres cosas en este orden: que la app funcione bien sin conexión en teléfonos modestos, que un equipo pequeño pueda mantener todo el sistema, y que ninguna pieza cara quede imposible de reemplazar.</p>
+
+  <h3>10.1 Recomendación</h3>
+  <div class="tw"><table>
+    <thead><tr><th style="width:20%">Capa</th><th style="width:26%">Elección</th><th>Por qué</th></tr></thead>
+    <tbody>
+      <tr><td><strong>App móvil</strong></td><td>React Native con Expo y TypeScript</td><td>Es el ecosistema con soporte más maduro para arquitectura sin conexión, y su entorno de ejecución en JavaScript permite escribir la lógica de sincronización, la cola de reintentos y la resolución de conflictos en el mismo lenguaje que el resto del equipo, sin bajar a código nativo. Las actualizaciones de configuración y de lógica ligera pueden publicarse sin pasar por la tienda.</td></tr>
+      <tr><td><strong>Base local</strong></td><td>WatermelonDB sobre SQLite</td><td>Carga diferida y capa reactiva pensadas para volúmenes altos: mantiene la interfaz fluida con decenas de miles de registros, que es exactamente el caso de un catálogo de productos y un histórico de clientes. Ofrece andamiaje de sincronización, no un motor completo, lo que obliga a escribir los extremos del servidor pero da control total sobre las reglas.</td></tr>
+      <tr><td><strong>Alternativa de sincronización</strong></td><td>PowerSync</td><td>Si se prefiere tratar la sincronización como infraestructura contratada en lugar de código propio. Sincroniza PostgreSQL con SQLite embebido, tiene manejo de conflictos incorporado y soporta React Native. Es el camino más rápido cuando la sincronización es el mayor riesgo del proyecto.</td></tr>
+      <tr><td><strong>Servidor</strong></td><td>NestJS sobre Node.js con TypeScript</td><td>Un solo lenguaje en móvil y servidor reduce el costo de mantenimiento del equipo y permite compartir los tipos de los contratos de la API y las reglas de cálculo de precios.</td></tr>
+      <tr><td><strong>Base de datos</strong></td><td>PostgreSQL 16 con PostGIS</td><td>Seguridad a nivel de fila para el aislamiento entre empresas, tipo JSON para los campos configurables, y extensión geográfica para consultas de cercanía, geocercas y validación de visita en sitio.</td></tr>
+      <tr><td><strong>Eventos y trabajos</strong></td><td>Redis con BullMQ; RabbitMQ al crecer</td><td>Timbrado, notificaciones, cálculo de indicadores e integración con el ERP son procesos asíncronos que no deben bloquear la respuesta al dispositivo.</td></tr>
+      <tr><td><strong>Archivos</strong></td><td>Almacén compatible con S3 y URLs de subida firmadas</td><td>Las fotografías se suben directo desde el dispositivo sin pasar por el servidor de aplicación, con compresión previa en el cliente.</td></tr>
+      <tr><td><strong>Mapas y navegación</strong></td><td>Mapbox para visualización y navegación</td><td>Mapas personalizables con la identidad de cada empresa, buen desempeño en móvil y costo previsible por usuario activo.</td></tr>
+      <tr><td><strong>Optimización de rutas</strong></td><td>VROOM con OSRM autoalojado; Google Route Optimization como opción gestionada</td><td>VROOM resuelve en milisegundos problemas con capacidad, ventanas de tiempo y recogida–entrega, expone una API HTTP y usa distancias reales de la red vial. Autoalojarlo evita el costo por llamada, que es el rubro que más se dispara en operaciones con miles de paradas diarias.</td></tr>
+      <tr><td><strong>Fiscal</strong></td><td>Proveedor autorizado de certificación vía API, detrás de una interfaz propia</td><td>El timbrado y la validación de catálogos del SAT son un servicio especializado y regulado. Construirlo no aporta ventaja competitiva; encapsularlo permite cambiar de proveedor o de país.</td></tr>
+      <tr><td><strong>Panel web</strong></td><td>React con Vite y TanStack Query</td><td>Comparte modelo de datos, validaciones y componentes con la app móvil.</td></tr>
+      <tr><td><strong>Infraestructura</strong></td><td>Contenedores sobre Kubernetes gestionado, con región en México o en el sur de Estados Unidos</td><td>La latencia importa en sincronizaciones masivas al inicio y al cierre de jornada, cuando cientos de dispositivos se conectan casi al mismo tiempo.</td></tr>
+      <tr><td><strong>Observabilidad</strong></td><td>OpenTelemetry con Grafana o equivalente; Sentry en el cliente</td><td>Los fallos de campo son difíciles de reproducir: hace falta ver la traza del dispositivo real.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>10.2 Comparación de la decisión más importante</h3>
+  <div class="cols">
+    <div class="card stack-pick">
+      <h4>React Native — elegido</h4>
+      <p>Mejor ecosistema sin conexión, lógica de sincronización en TypeScript, un solo lenguaje en todo el producto, y actualizaciones de contenido sin pasar por la tienda. Es el mejor ajuste cuando el riesgo principal es la sincronización, no el rendimiento gráfico.</p>
+    </div>
+    <div class="card">
+      <h4>Flutter</h4>
+      <p>Compilación anticipada a código nativo y motor de render propio; entrega la experiencia más fluida en interfaces muy exigentes, como mapas con cientos de marcadores en movimiento. Si el producto girara alrededor de una torre de control visual, sería la elección. Aquí ese no es el cuello de botella.</p>
+    </div>
+    <div class="card">
+      <h4>Nativo por plataforma</h4>
+      <p>Máximo control sobre batería, servicios en segundo plano y periféricos como impresoras y lectores. Cuesta dos equipos y dos bases de código; se reserva para el caso de que el consumo de batería resulte inaceptable en pruebas de campo.</p>
+    </div>
+  </div>
+
+  <div class="note">
+    <p style="margin:0"><strong>Recomendación de implementación.</strong> Sea cual sea el motor local elegido, envolverlo en una capa de repositorio desde la primera semana y escribir la primera migración de esquema desde el día uno, aunque no haga nada. Ambas cosas son baratas al inicio y carísimas después.</p>
+  </div>
+</section>
+
+<!-- ============ 11 ============ -->
+<section id="s11">
+  <h2><span class="num">11</span>Modelo de datos</h2>
+  <hr class="rule">
+  <p>Entidades principales. Todas las tablas propias de una empresa incluyen la columna <code>empresa_id</code> como primer campo de sus índices compuestos.</p>
+  <div class="tw"><table>
+    <thead><tr><th style="width:20%">Entidad</th><th>Atributos relevantes</th><th style="width:24%">Relaciones</th></tr></thead>
+    <tbody>
+      <tr><td><strong>empresa</strong></td><td>razón social, RFC, régimen, moneda, zona horaria, configuración, tema visual</td><td>Raíz de todo el modelo</td></tr>
+      <tr><td><strong>usuario</strong></td><td>credenciales, rol, dispositivo asignado, estado</td><td>pertenece a empresa y a centro</td></tr>
+      <tr><td><strong>centro_distribucion</strong></td><td>ubicación, horario de embarque, almacén asociado</td><td>agrupa rutas y unidades</td></tr>
+      <tr><td><strong>cliente</strong></td><td>nombre, canal, coordenadas, horario, días de visita, datos fiscales, límite de crédito, campos extra</td><td>pertenece a una o varias rutas</td></tr>
+      <tr><td><strong>producto</strong></td><td>clave, presentación, factor caja–pieza, código de barras, clave fiscal, perecedero</td><td>referenciado por lista de precios</td></tr>
+      <tr><td><strong>lista_precio / precio</strong></td><td>vigencia, canal, moneda, impuestos</td><td>asignable a cliente, canal o zona</td></tr>
+      <tr><td><strong>promocion</strong></td><td>tipo, condición, beneficio, vigencia, tope</td><td>aplica a producto o combinación</td></tr>
+      <tr><td><strong>ruta</strong></td><td>frecuencia, secuencia base, unidad y operador asignados</td><td>contiene clientes</td></tr>
+      <tr><td><strong>jornada</strong></td><td>fecha, operador, unidad, estado, kilometraje inicial y final</td><td>agrupa visitas y liquidación</td></tr>
+      <tr><td><strong>visita</strong></td><td>hora de llegada y salida, coordenadas, resultado, motivo, distancia al cliente</td><td>pertenece a jornada y a cliente</td></tr>
+      <tr><td><strong>pedido / entrega</strong></td><td>líneas, cantidades pedidas y entregadas, importes, impuestos, estado</td><td>se origina en visita</td></tr>
+      <tr><td><strong>inventario_unidad</strong></td><td>producto, lote, caducidad, cantidad cargada, vendida, devuelta</td><td>pertenece a jornada</td></tr>
+      <tr><td><strong>evidencia</strong></td><td>tipo, archivo, hash, coordenadas, marca de tiempo, dispositivo</td><td>ligada a entrega o a incidencia</td></tr>
+      <tr><td><strong>cobro</strong></td><td>forma de pago, importe, folio, evidencia</td><td>aplica a uno o más documentos</td></tr>
+      <tr><td><strong>documento_fiscal</strong></td><td>tipo, UUID, XML, estado de timbrado, complemento</td><td>ligado a entrega o traslado</td></tr>
+      <tr><td><strong>liquidacion</strong></td><td>totales de carga, venta, devolución, cobro, efectivo declarado, diferencias, aprobación</td><td>cierra una jornada</td></tr>
+      <tr><td><strong>evento_sync</strong></td><td>operación, estado, intentos, conflicto, versión descartada</td><td>bitácora de sincronización</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ============ 12 ============ -->
+<section id="s12">
+  <h2><span class="num">12</span>Estrategia de configurabilidad</h2>
+  <hr class="rule">
+  <p>El requisito de que el diseño sea "mutable para cualquier negocio de este tipo" se cumple con cinco mecanismos concretos. Ninguno implica escribir código para un cliente nuevo.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th style="width:22%">Mecanismo</th><th>Qué permite cambiar</th><th style="width:26%">Ejemplo</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Interruptores de módulo</strong></td><td>Encender o apagar bloques completos de funcionalidad por empresa y por plan contratado.</td><td>Una distribuidora sin preventa opera solo con autoventa; el menú no muestra pedidos anticipados.</td></tr>
+      <tr><td><strong>Formularios definidos por datos</strong></td><td>Campos, tipos, validaciones, obligatoriedad y orden de las pantallas de captura, descritos como esquema y no como código.</td><td>La embotelladora exige foto del refrigerador; la panificadora exige conteo de caducidades.</td></tr>
+      <tr><td><strong>Catálogos propios</strong></td><td>Motivos, canales, tipos de cliente, unidades de medida, estados de visita.</td><td>Cada empresa define sus causas de devolución sin depender del proveedor.</td></tr>
+      <tr><td><strong>Reglas de negocio parametrizadas</strong></td><td>Umbrales de crédito, tolerancia de diferencia en efectivo, radio de validación de visita, ventana de reprogramación.</td><td>Una empresa acepta 50 metros de tolerancia y otra 200 por operar en zona rural.</td></tr>
+      <tr><td><strong>Identidad visual por empresa</strong></td><td>Logotipo, color principal, nombre visible, plantillas de comprobante y de notificación.</td><td>El repartidor ve la app con los colores de su empresa; el tendero recibe el comprobante con esa marca.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>12.1 Alta de una empresa nueva</h3>
+  <p>El proceso debe ser automatizado de extremo a extremo, porque la configuración manual es lo que vuelve poco rentable un producto multiempresa a medida que crece:</p>
+  <ol>
+    <li>Crear la empresa con identificadores inmutables y asignarle región.</li>
+    <li>Establecer roles, permisos y el primer usuario administrador.</li>
+    <li>Aplicar la plantilla de configuración del giro (panificación, bebidas, abarrotes) como punto de partida editable.</li>
+    <li>Importar catálogos de productos y clientes desde hoja de cálculo o desde el ERP.</li>
+    <li>Registrar credenciales del timbrador fiscal y de las integraciones.</li>
+    <li>Publicar la identidad visual y habilitar los módulos contratados.</li>
+    <li>Ejecutar la validación automática de fronteras entre empresas antes de liberar el acceso.</li>
+  </ol>
+</section>
+
+<!-- ============ 13 ============ -->
+<section id="s13">
+  <h2><span class="num">13</span>Integraciones</h2>
+  <hr class="rule">
+  <div class="tw"><table>
+    <thead><tr><th style="width:22%">Sistema</th><th>Dirección y contenido</th><th style="width:20%">Mecanismo</th></tr></thead>
+    <tbody>
+      <tr><td><strong>ERP del cliente</strong></td><td>Entran catálogos, precios, clientes y existencias. Salen ventas, devoluciones, cobros y liquidaciones.</td><td>API REST y archivos programados; eventos salientes</td></tr>
+      <tr><td><strong>Proveedor de timbrado</strong></td><td>Sale la solicitud de comprobante y su complemento; entra el documento sellado y el acuse.</td><td>API síncrona con reintento y cola</td></tr>
+      <tr><td><strong>Mapas y navegación</strong></td><td>Geocodificación, teselas de mapa, rutas y tiempos de viaje.</td><td>SDK móvil y API</td></tr>
+      <tr><td><strong>Optimización de rutas</strong></td><td>Sale el conjunto de paradas y restricciones; entra la secuencia y la asignación por vehículo.</td><td>Servicio interno o API gestionada</td></tr>
+      <tr><td><strong>Pagos</strong></td><td>Cobro con tarjeta en ruta y conciliación de transferencias.</td><td>SDK de pasarela con lectura en dispositivo</td></tr>
+      <tr><td><strong>Mensajería</strong></td><td>Aviso de próxima llegada y envío de comprobante al negocio.</td><td>API de mensajería y notificaciones push</td></tr>
+      <tr><td><strong>Telemetría de flota</strong></td><td>Entra posición, kilometraje y estado del vehículo cuando la empresa ya usa un proveedor.</td><td>Conector configurable</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ============ 14 ============ -->
+<section id="s14">
+  <h2><span class="num">14</span>Plan de entrega</h2>
+  <hr class="rule">
+  <div class="tw"><table>
+    <thead><tr><th style="width:14%">Fase</th><th style="width:12%">Duración</th><th>Contenido</th></tr></thead>
+    <tbody>
+      <tr><td><strong>0 · Descubrimiento</strong></td><td>3 semanas</td><td>Acompañamiento de rutas reales durante jornadas completas, medición de tiempos por parada, inventario de documentos en papel y definición del piloto.</td></tr>
+      <tr><td><strong>1 · Núcleo de reparto</strong></td><td>10 semanas</td><td>Autenticación, catálogos, rutas, ruta del día, entrega con evidencia, inventario de unidad, sincronización sin conexión y panel básico. Es el producto mínimo utilizable en una ruta real.</td></tr>
+      <tr><td><strong>2 · Dinero y fisco</strong></td><td>8 semanas</td><td>Cobro, crédito, liquidación, CFDI 4.0 y Carta Porte, conciliación y reportes financieros.</td></tr>
+      <tr><td><strong>3 · Comercial</strong></td><td>8 semanas</td><td>Preventa, listas de precios múltiples, promociones, auditoría de exhibición y app del negocio receptor.</td></tr>
+      <tr><td><strong>4 · Escala</strong></td><td>8 semanas</td><td>Optimización de rutas, torre de control con alertas, analítica avanzada, configurador visual y conectores de ERP.</td></tr>
+      <tr><td><strong>5 · Producto</strong></td><td>continuo</td><td>Alta autoservicio de empresas, plantillas por giro, marketplace de conectores e internacionalización.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="tiny">Las duraciones suponen un equipo de cinco a seis personas: dos en móvil, dos en servidor, una en producto y diseño, y una compartida en calidad e infraestructura.</p>
+</section>
+
+<!-- ============ 15 ============ -->
+<section id="s15">
+  <h2><span class="num">15</span>Riesgos</h2>
+  <hr class="rule">
+  <div class="tw"><table>
+    <thead><tr><th style="width:26%">Riesgo</th><th style="width:11%">Impacto</th><th>Mitigación</th></tr></thead>
+    <tbody>
+      <tr><td>La sincronización crece sin control y aparecen pérdidas de datos difíciles de reproducir</td><td>Alto</td><td>Decidir el motor local y el modelo de conflictos en la semana uno; capa de repositorio; pruebas automatizadas que simulen pérdida de red en el pipeline de integración continua.</td></tr>
+      <tr><td>Rechazo del personal de campo por percepción de vigilancia</td><td>Alto</td><td>Declarar el propósito del rastreo, limitarlo al horario de jornada, involucrar operadores desde el piloto y mostrarles beneficios directos como menos papeleo y liquidación más rápida.</td></tr>
+      <tr><td>Cambios en la normativa fiscal</td><td>Medio</td><td>Módulo fiscal aislado, proveedor especializado, catálogos actualizables sin despliegue y seguimiento de publicaciones oficiales.</td></tr>
+      <tr><td>Costo de las llamadas a APIs de mapas con miles de paradas diarias</td><td>Medio</td><td>Autoalojar motor de rutas, cachear matrices de distancia y calcular por lotes fuera de hora pico.</td></tr>
+      <tr><td>Un cliente grande exige una funcionalidad que rompe el modelo configurable</td><td>Alto</td><td>Política explícita de no bifurcar el código; toda petición se traduce a metadatos o se rechaza. Instancia dedicada como salida cuando lo que se exige es aislamiento, no comportamiento distinto.</td></tr>
+      <tr><td>Calidad de los datos maestros del cliente al migrar</td><td>Medio</td><td>Herramienta de importación con validación, reporte de inconsistencias y periodo de operación en paralelo con el proceso actual.</td></tr>
+      <tr><td>Dispositivos de gama muy baja sin memoria suficiente</td><td>Medio</td><td>Definir un dispositivo mínimo certificado, purgar historial local, comprimir evidencias y medir consumo en cada versión.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ============ 16 ============ -->
+<section id="s16">
+  <h2><span class="num">16</span>Métricas de éxito</h2>
+  <hr class="rule">
+  <div class="cols">
+    <div class="card"><h4>Operación</h4><p>Paradas atendidas por jornada, tiempo promedio por parada, kilómetros recorridos por entrega y porcentaje de rutas cerradas antes del horario objetivo.</p></div>
+    <div class="card"><h4>Calidad del dato</h4><p>Porcentaje de paradas con evidencia completa, disputas por faltante por cada mil entregas y días para conciliar el efectivo de la jornada.</p></div>
+    <div class="card"><h4>Comercial</h4><p>Cobertura efectiva de clientes visitados, porcentaje de devolución sobre venta y valor promedio del pedido.</p></div>
+    <div class="card"><h4>Adopción</h4><p>Proporción de rutas operando sin papel, operadores activos diarios y tiempo de alta de una empresa nueva.</p></div>
+  </div>
+</section>
+
+<!-- ============ 17 ============ -->
+<section id="s17">
+  <h2><span class="num">17</span>Referencias</h2>
+  <hr class="rule">
+  <p class="tiny">Fuentes consultadas para el análisis de mercado, las capacidades esperadas y las decisiones técnicas. Consultadas en septiembre de 2026.</p>
+  <ul class="tiny" style="line-height:1.7">
+    <li>Gartner Peer Insights — categoría de software de entrega directa a tienda. <span style="word-break:break-all">gartner.com/reviews/market/direct-store-delivery-dsd-software</span></li>
+    <li>SAP Direct Store Delivery y comparativas de plataformas DSD 2026. <span style="word-break:break-all">simplydepo.com/industry/dsd-software</span></li>
+    <li>Entrega directa a tienda para bienes de consumo y optimización de rutas. <span style="word-break:break-all">ebestmobile.com/blog/direct-store-delivery-for-cpg</span></li>
+    <li>Capacidades de contabilidad de ruta y prueba de entrega. <span style="word-break:break-all">guideflow.com/blog/direct-store-delivery-software</span></li>
+    <li>Facturación en ruta y ciclo order-to-cash en distribución de bebidas. <span style="word-break:break-all">latamready.blog/software-para-distribucion-de-bebidas-factura-en-ruta</span></li>
+    <li>Circuito de preventa, depósito y reparto en distribuidoras. <span style="word-break:break-all">bcnsoft.com.ar/blog/software-para-distribuidoras-de-bebidas</span></li>
+    <li>SAT — complemento Carta Porte 3.1 y CFDI 4.0, obligaciones y sanciones. <span style="word-break:break-all">idnube.com/blog/complemento-carta-porte-2026-guia-completa</span></li>
+    <li>Arquitectura sin conexión en React Native: WatermelonDB, RxDB y PowerSync. <span style="word-break:break-all">procedure.tech/blogs/react-native-offline-first</span> · <span style="word-break:break-all">72technologies.com/blog/offline-first-react-native-database-2026</span></li>
+    <li>Comparativa de marcos multiplataforma para aplicaciones empresariales. <span style="word-break:break-all">kanopylabs.com/blog/dotnet-maui-vs-flutter-vs-react-native-enterprise</span></li>
+    <li>Arquitectura multiempresa y marca blanca. <span style="word-break:break-all">velcod.com/multi-tenant-saas-architecture</span> · <span style="word-break:break-all">developex.com/blog/building-scalable-white-label-saas</span></li>
+    <li>Motores de optimización de rutas autoalojados: VROOM, JSprit y OR-Tools. <span style="word-break:break-all">pistack.xyz/posts/2026-06-16-self-hosted-vehicle-routing-optimization-vroom-jsprit-ortools</span></li>
+    <li>Escala de la distribución en México: informe anual de Grupo Bimbo y cobertura del sistema de embotelladores.</li>
+  </ul>
+</section>
+
+</main>
+</div>
+
+<footer>
+  <div class="fi">EnRuta · Especificación de requisitos de software v1.0 · Documento de trabajo sujeto a revisión con los interesados antes de iniciar desarrollo.</div>
+</footer>
+
+</body>
+</html>
